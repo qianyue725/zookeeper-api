@@ -3,8 +3,11 @@
 .project
 /target/
 /.settings/
-/.idea/
-zookeeper-api.iml
+.idea
+*.iml
+out
+gen
+
 
 # Java class files
 *.class

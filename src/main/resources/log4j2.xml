@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN">
+
+	<Properties>
+		<!--定义日志文件的存储地址 勿在 LogBack 的配置中使用相对路径 -->
+		<Property name="LOG_HOME_PATH"
+			value="/home/qianyue/logs/javaweb" />
+		<Property name="APP_NAME" value="zookeeper-api" />
+		<Property name="LOG_LEVEL_PATTERN" value="%5p" />
+		<Property name="LOG_PATTERN">
+			%-d{yyyy-MM-dd HH:mm:ss.SSS} ${hostName} ${LOG_LEVEL_PATTERN} [%15.15t] %-15.15c{1.} : [%X{logId}] %m%n
+		</Property>
+	</Properties>
+
+	<Appenders>
+
+		<!-- 控制台输出 -->
+		<Console name="CONSOLE" target="SYSTEM_OUT">
+		    <!--控制台只输出level及以上级别的信息（onMatch），其他的直接拒绝（onMismatch） -->
+			<ThresholdFilter level="DEBUG" onMatch="ACCEPT" onMismatch="DENY" />
+			<PatternLayout>
+				<Pattern>${LOG_PATTERN}</Pattern>
+			</PatternLayout>
+		</Console>
+
+		<!-- 按照每天生成日志文件 -->
+		<RollingFile name="ROLLING_FILE"
+			fileName="${LOG_HOME_PATH}/${APP_NAME}.log"
+			filePattern="${LOG_HOME_PATH}/${date:yyyy-MM}/${APP_NAME}-%d{yyyy-MM-dd}-%i.log.gz"
+			ignoreExceptions="false">
+			<!--日志文件只记录level及以上级别的信息（onMatch），其他的直接拒绝（onMismatch） -->
+			<ThresholdFilter level="DEBUG" onMatch="ACCEPT" onMismatch="DENY" />
+			<PatternLayout>
+				<Pattern>${LOG_PATTERN}</Pattern>
+			</PatternLayout>
+			<Policies>
+				<TimeBasedTriggeringPolicy interval="1" />
+				<SizeBasedTriggeringPolicy size="10 MB" />
+			</Policies>
+			<DefaultRolloverStrategy max="1000" />
+		</RollingFile>
+
+	</Appenders>
+
+	<!-- 日志输出级别 -->
+	<Loggers>
+		<!--过滤掉spring和mybatis的一些无用的DEBUG信息 -->
+		<Logger name="com.test.study.zookeeper" level="DEBUG" />
+
+		<Root level="all">
+			<AppenderRef ref="CONSOLE" />
+			<AppenderRef ref="ROLLING_FILE" />
+		</Root>
+	</Loggers>
+</Configuration>
+
+
+
+
+
